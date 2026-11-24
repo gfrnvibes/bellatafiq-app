@@ -53,7 +53,7 @@ export interface ActivityLog {
 export interface BackupPayload {
   version: 1;
   exportedAt: string;
-  appName: 'Bel Sekolah Modern';
+  appName: 'Bellatafiq' | 'Bel Sekolah Modern';
   schedule: WeekSchedule;
   presets: PresetProfile[];
 }

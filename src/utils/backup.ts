@@ -10,7 +10,7 @@ export function buildBackupPayload(
   return {
     version: 1,
     exportedAt: new Date().toISOString(),
-    appName: 'Bel Sekolah Modern',
+    appName: 'Bellatafiq',
     schedule,
     presets,
   };
@@ -31,7 +31,7 @@ export function validateBackupJson(rawJson: string): BackupPayload {
   return {
     version: 1,
     exportedAt: parsed.exportedAt || new Date().toISOString(),
-    appName: 'Bel Sekolah Modern',
+    appName: 'Bellatafiq',
     schedule: parsed.schedule,
     presets: Array.isArray(parsed.presets) ? parsed.presets : [],
   };

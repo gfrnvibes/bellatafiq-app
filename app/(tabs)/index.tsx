@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -70,6 +71,21 @@ export default function DashboardScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
+      {/* Banner Brand Bellatafiq */}
+      <View
+        style={[
+          styles.brandCard,
+          { backgroundColor: '#FFFFFF', borderColor: colors.border },
+        ]}
+      >
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.brandLogo}
+          resizeMode="contain"
+        />
+        <Text style={styles.brandSlogan}>Bell Sekolah Modern</Text>
+      </View>
+
       {/* Kartu Status Koneksi */}
       <View
         style={[
@@ -303,6 +319,21 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, gap: 14, paddingBottom: 32 },
+  brandCard: {
+    borderRadius: 16,
+    borderWidth: 1,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    gap: 4,
+  },
+  brandLogo: { width: 170, height: 52 },
+  brandSlogan: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#114B42',
+    letterSpacing: 0.4,
+  },
   card: {
     borderRadius: 16,
     borderWidth: 1,

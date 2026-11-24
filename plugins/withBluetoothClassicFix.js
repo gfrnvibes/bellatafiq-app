@@ -1,20 +1,27 @@
-const { withGradleProperties } = require('expo/config-plugins');
+const { withProjectBuildGradle } = require('expo/config-plugins');
 
 /**
- * Mengaktifkan BuildConfig pada modul library (dibutuhkan oleh react-native-bluetooth-classic di AGP 8+).
+ * Mengaktifkan buildFeatures.buildConfig pada react-native-bluetooth-classic
+ * karena AGP 9.0 (Expo SDK 58) menghapus opsi global gradle.properties.
  */
 module.exports = function withBluetoothClassicFix(config) {
-  return withGradleProperties(config, (mod) => {
-    const key = 'android.defaults.buildfeatures.buildconfig';
-    const exists = mod.modResults.some(
-      (item) => item.type === 'property' && item.key === key
-    );
-    if (!exists) {
-      mod.modResults.push({
-        type: 'property',
-        key,
-        value: 'true',
-      });
+  return withProjectBuildGradle(config, (mod) => {
+    const marker = '// withBluetoothClassicFix';
+    if (!mod.modResults.contents.includes(marker)) {
+      mod.modResults.contents += `
+${marker}
+subprojects { subproject ->
+  if (subproject.name == 'react-native-bluetooth-classic') {
+    subproject.plugins.withId('com.android.library') {
+      subproject.android {
+        buildFeatures {
+          buildConfig = true
+        }
+      }
+    }
+  }
+}
+`;
     }
     return mod;
   });

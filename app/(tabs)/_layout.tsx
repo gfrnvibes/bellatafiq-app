@@ -43,7 +43,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="audio"
         options={{
-          title: 'Tes Nada',
+          title: 'Putar Nada',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="musical-notes-outline" size={size} color={color as string} />
           ),

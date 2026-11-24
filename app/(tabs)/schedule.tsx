@@ -379,9 +379,9 @@ export default function ScheduleScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  dayBar: { maxHeight: 56, borderBottomWidth: 1 },
-  dayBarContent: { paddingHorizontal: 12, alignItems: 'center', gap: 8 },
-  dayChip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999 },
+  dayBar: { flexGrow: 0, flexShrink: 0, borderBottomWidth: 1 },
+  dayBarContent: { paddingHorizontal: 12, paddingVertical: 10, alignItems: 'center', gap: 8 },
+  dayChip: { paddingHorizontal: 16, paddingVertical: 9, borderRadius: 999 },
   toolbar: { flexDirection: 'row', padding: 12, gap: 8 },
   toolBtn: {
     flex: 1,

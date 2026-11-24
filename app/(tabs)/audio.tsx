@@ -53,7 +53,7 @@ export default function AudioTestScreen() {
         ]}
       >
         <Text style={[styles.cardTitle, { color: colors.text }]}>
-          Uji Nomor MP3 Bebas
+          Putar Nomor MP3 Manual
         </Text>
         <View style={styles.customRow}>
           <TextInput

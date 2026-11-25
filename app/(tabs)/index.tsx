@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,6 +13,15 @@ import {
 import { useAppStore } from '@/store/useAppStore';
 import { useTheme } from '@/theme/useTheme';
 import { DAYS_OF_WEEK } from '@/types/bell';
+
+const QUICK_BELLS = [
+  { id: 1, title: 'Masuk Kelas', icon: 'enter-outline' },
+  { id: 2, title: 'Pergantian Pelajaran', icon: 'swap-horizontal-outline' },
+  { id: 4, title: 'Istirahat', icon: 'cafe-outline' },
+  { id: 5, title: 'Masuk Setelah Istirahat', icon: 'notifications-outline' },
+  { id: 8, title: 'Sholat Dzuhur', icon: 'moon-outline' },
+  { id: 10, title: 'Pulang', icon: 'home-outline' },
+] as const;
 
 export default function DashboardScreen() {
   const { colors } = useTheme();
@@ -32,6 +40,7 @@ export default function DashboardScreen() {
   } = useAppStore();
 
   const [now, setNow] = useState(new Date());
+  const [playingQuickId, setPlayingQuickId] = useState<number | null>(null);
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -66,26 +75,21 @@ export default function DashboardScreen() {
     }
   };
 
+  const handleToggleQuickBell = async (id: number) => {
+    if (playingQuickId === id) {
+      setPlayingQuickId(null);
+      await stopMp3OnDevice();
+    } else {
+      setPlayingQuickId(id);
+      await playMp3OnDevice(id);
+    }
+  };
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
-      {/* Banner Brand Bellatafiq */}
-      <View
-        style={[
-          styles.brandCard,
-          { backgroundColor: '#FFFFFF', borderColor: colors.border },
-        ]}
-      >
-        <Image
-          source={require('../../assets/images/logo.png')}
-          style={styles.brandLogo}
-          resizeMode="contain"
-        />
-        <Text style={styles.brandSlogan}>Bell Sekolah Modern</Text>
-      </View>
-
       {/* Kartu Status Koneksi */}
       <View
         style={[
@@ -95,19 +99,12 @@ export default function DashboardScreen() {
       >
         <View style={styles.rowBetween}>
           <View style={styles.rowCenter}>
-            <View
-              style={[styles.dot, { backgroundColor: statusColor }]}
-            />
+            <View style={[styles.dot, { backgroundColor: statusColor }]} />
             <Text style={[styles.cardTitle, { color: colors.text }]}>
               Status Perangkat
             </Text>
           </View>
-          <View
-            style={[
-              styles.badge,
-              { backgroundColor: colors.surfaceAlt },
-            ]}
-          >
+          <View style={[styles.badge, { backgroundColor: colors.surfaceAlt }]}>
             <Ionicons
               name={mode === 'bluetooth' ? 'bluetooth' : 'wifi'}
               size={14}
@@ -196,41 +193,69 @@ export default function DashboardScreen() {
         </Pressable>
       </View>
 
-      {/* Aksi Cepat */}
-      <View style={styles.quickRow}>
-        <Pressable
-          disabled={busy}
-          onPress={() => playMp3OnDevice(1)}
-          style={[
-            styles.quickCard,
-            { backgroundColor: colors.surface, borderColor: colors.border },
-          ]}
-        >
-          <Ionicons name="notifications" size={24} color={colors.primary} />
-          <Text style={[styles.quickTitle, { color: colors.text }]}>
-            Bunyikan Bel #1
-          </Text>
-          <Text style={[styles.quickSub, { color: colors.textMuted }]}>
-            Tes nada utama
-          </Text>
-        </Pressable>
+      {/* Aksi Cepat Compact (Play/Stop Menyatu) */}
+      <View style={styles.sectionHeader}>
+        <Text style={[styles.mutedLabel, { color: colors.textMuted }]}>
+          AKSI CEPAT BEL
+        </Text>
+        <Text style={{ fontSize: 11, color: colors.textMuted }}>
+          Ketuk untuk Putar / Stop
+        </Text>
+      </View>
 
-        <Pressable
-          disabled={busy}
-          onPress={stopMp3OnDevice}
-          style={[
-            styles.quickCard,
-            { backgroundColor: colors.surface, borderColor: colors.border },
-          ]}
-        >
-          <Ionicons name="stop-circle" size={24} color={colors.danger} />
-          <Text style={[styles.quickTitle, { color: colors.text }]}>
-            Stop Audio
-          </Text>
-          <Text style={[styles.quickSub, { color: colors.textMuted }]}>
-            Hentikan MP3
-          </Text>
-        </Pressable>
+      <View style={styles.quickGrid}>
+        {QUICK_BELLS.map((item) => {
+          const isPlaying = playingQuickId === item.id;
+          return (
+            <Pressable
+              key={item.id}
+              disabled={busy}
+              onPress={() => handleToggleQuickBell(item.id)}
+              style={[
+                styles.quickCompactCard,
+                {
+                  backgroundColor: isPlaying
+                    ? `${colors.danger}14`
+                    : colors.surface,
+                  borderColor: isPlaying ? colors.danger : colors.border,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.quickIconCircle,
+                  {
+                    backgroundColor: isPlaying
+                      ? colors.danger
+                      : `${colors.primary}18`,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name={isPlaying ? 'stop' : (item.icon as never)}
+                  size={16}
+                  color={isPlaying ? '#FFFFFF' : colors.primary}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={[styles.quickCompactTitle, { color: colors.text }]}
+                  numberOfLines={2}
+                >
+                  {item.title}
+                </Text>
+                <Text
+                  style={[
+                    styles.quickCompactSub,
+                    { color: isPlaying ? colors.danger : colors.textMuted },
+                  ]}
+                >
+                  {isPlaying ? 'Ketuk untuk Stop' : `MP3 #${item.id}`}
+                </Text>
+              </View>
+            </Pressable>
+          );
+        })}
       </View>
 
       {/* Ringkasan Jadwal Hari Ini */}
@@ -319,21 +344,6 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, gap: 14, paddingBottom: 32 },
-  brandCard: {
-    borderRadius: 16,
-    borderWidth: 1,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    gap: 4,
-  },
-  brandLogo: { width: 170, height: 52 },
-  brandSlogan: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#114B42',
-    letterSpacing: 0.4,
-  },
   card: {
     borderRadius: 16,
     borderWidth: 1,
@@ -389,16 +399,36 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   secondaryBtnText: { fontSize: 14, fontWeight: '600' },
-  quickRow: { flexDirection: 'row', gap: 12 },
-  quickCard: {
-    flex: 1,
-    borderRadius: 16,
-    borderWidth: 1,
-    padding: 14,
-    gap: 4,
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 2,
   },
-  quickTitle: { fontSize: 15, fontWeight: '700', marginTop: 4 },
-  quickSub: { fontSize: 12 },
+  quickGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  quickCompactCard: {
+    width: '48.8%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  quickIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quickCompactTitle: { fontSize: 12.5, fontWeight: '700', lineHeight: 16 },
+  quickCompactSub: { fontSize: 10.5, fontWeight: '600', marginTop: 2 },
   emptyText: { fontSize: 13, fontStyle: 'italic' },
   slotRow: {
     flexDirection: 'row',

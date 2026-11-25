@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { Image, Text, View } from 'react-native';
 import { useTheme } from '@/theme/useTheme';
 
 export default function TabLayout() {
@@ -27,6 +28,33 @@ export default function TabLayout() {
         options={{
           title: 'Bellatafiq',
           tabBarLabel: 'Beranda',
+          headerTitle: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+              <View
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  paddingHorizontal: 8,
+                  paddingVertical: 3,
+                  borderRadius: 8,
+                }}
+              >
+                <Image
+                  source={require('../../assets/images/logo.png')}
+                  style={{ width: 108, height: 30 }}
+                  resizeMode="contain"
+                />
+              </View>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: '600',
+                  color: colors.textMuted,
+                }}
+              >
+                Bell Sekolah Modern
+              </Text>
+            </View>
+          ),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color as string} />
           ),

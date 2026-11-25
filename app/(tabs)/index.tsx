@@ -90,108 +90,111 @@ export default function DashboardScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
-      {/* Kartu Status Koneksi */}
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.surface, borderColor: colors.border },
-        ]}
-      >
-        <View style={styles.rowBetween}>
-          <View style={styles.rowCenter}>
-            <View style={[styles.dot, { backgroundColor: statusColor }]} />
-            <Text style={[styles.cardTitle, { color: colors.text }]}>
-              Status Perangkat
-            </Text>
-          </View>
-          <View style={[styles.badge, { backgroundColor: colors.surfaceAlt }]}>
-            <Ionicons
-              name={mode === 'bluetooth' ? 'bluetooth' : 'wifi'}
-              size={14}
-              color={colors.primary}
-            />
-            <Text style={[styles.badgeText, { color: colors.text }]}>
-              {mode === 'bluetooth' ? 'Bluetooth SPP' : 'Wi-Fi AP'}
-            </Text>
-          </View>
-        </View>
-
-        <Text style={[styles.statusText, { color: statusColor }]}>
-          {statusLabel}
-        </Text>
-
-        {lastError ? (
-          <Pressable
-            onPress={clearError}
-            style={[styles.errorBanner, { backgroundColor: `${colors.danger}18` }]}
-          >
-            <Ionicons name="alert-circle" size={18} color={colors.danger} />
-            <Text style={[styles.errorText, { color: colors.danger }]}>
-              {lastError}
-            </Text>
-          </Pressable>
-        ) : null}
-
-        <Pressable
-          onPress={() => router.push('/(tabs)/settings')}
-          style={[styles.primaryBtn, { backgroundColor: colors.primary }]}
-        >
-          <Ionicons
-            name={status === 'connected' ? 'swap-horizontal' : 'link'}
-            size={18}
-            color={colors.primaryText}
-          />
-          <Text style={[styles.btnText, { color: colors.primaryText }]}>
-            {status === 'connected'
-              ? 'Kelola Koneksi'
-              : 'Hubungkan ke Bel Sekolah'}
-          </Text>
-        </Pressable>
-      </View>
-
-      {/* Kartu Jam & Sinkronisasi */}
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.surface, borderColor: colors.border },
-        ]}
-      >
-        <Text style={[styles.mutedLabel, { color: colors.textMuted }]}>
-          WAKTU SAAT INI ({todayName.toUpperCase()})
-        </Text>
-        <Text style={[styles.clockText, { color: colors.text }]}>
-          {now.toLocaleTimeString('id-ID', { hour12: false })}
-        </Text>
-        <Text style={[styles.dateText, { color: colors.textMuted }]}>
-          {now.toLocaleDateString('id-ID', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
-        </Text>
-
-        <Pressable
-          disabled={busy}
-          onPress={handleSyncTime}
+      {/* Baris Compact 2 Kolom: Status Perangkat & Jam */}
+      <View style={styles.topRow}>
+        {/* Kolom 1: Status Perangkat */}
+        <View
           style={[
-            styles.secondaryBtn,
-            {
-              backgroundColor: colors.surfaceAlt,
-              opacity: busy ? 0.6 : 1,
-            },
+            styles.compactCard,
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
         >
-          {busy ? (
-            <ActivityIndicator size="small" color={colors.primary} />
-          ) : (
-            <Ionicons name="time-outline" size={18} color={colors.primary} />
-          )}
-          <Text style={[styles.secondaryBtnText, { color: colors.text }]}>
-            Sinkronkan Waktu ke Perangkat
+          <View style={styles.rowBetween}>
+            <View style={styles.rowCenter}>
+              <View style={[styles.dot, { backgroundColor: statusColor }]} />
+              <Text style={[styles.compactTitle, { color: colors.text }]}>
+                Perangkat
+              </Text>
+            </View>
+            <View style={[styles.badge, { backgroundColor: colors.surfaceAlt }]}>
+              <Ionicons
+                name={mode === 'bluetooth' ? 'bluetooth' : 'wifi'}
+                size={12}
+                color={colors.primary}
+              />
+              <Text style={[styles.badgeText, { color: colors.text }]}>
+                {mode === 'bluetooth' ? 'BT' : 'Wi-Fi'}
+              </Text>
+            </View>
+          </View>
+
+          <Text
+            style={[styles.compactStatus, { color: statusColor }]}
+            numberOfLines={1}
+          >
+            {statusLabel}
+          </Text>
+
+          <Pressable
+            onPress={() => router.push('/(tabs)/settings')}
+            style={[styles.compactBtn, { backgroundColor: colors.primary }]}
+          >
+            <Ionicons
+              name={status === 'connected' ? 'swap-horizontal' : 'link'}
+              size={14}
+              color={colors.primaryText}
+            />
+            <Text style={[styles.compactBtnText, { color: colors.primaryText }]}>
+              {status === 'connected' ? 'Kelola' : 'Hubungkan'}
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* Kolom 2: Jam & Sinkronisasi */}
+        <View
+          style={[
+            styles.compactCard,
+            { backgroundColor: colors.surface, borderColor: colors.border },
+          ]}
+        >
+          <Text style={[styles.mutedLabel, { color: colors.textMuted }]}>
+            {todayName.toUpperCase()}
+          </Text>
+          <Text style={[styles.clockText, { color: colors.text }]}>
+            {now.toLocaleTimeString('id-ID', { hour12: false })}
+          </Text>
+          <Text style={[styles.dateText, { color: colors.textMuted }]} numberOfLines={1}>
+            {now.toLocaleDateString('id-ID', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            })}
+          </Text>
+
+          <Pressable
+            disabled={busy}
+            onPress={handleSyncTime}
+            style={[
+              styles.compactBtn,
+              {
+                backgroundColor: colors.surfaceAlt,
+                opacity: busy ? 0.6 : 1,
+              },
+            ]}
+          >
+            {busy ? (
+              <ActivityIndicator size="small" color={colors.primary} />
+            ) : (
+              <Ionicons name="time-outline" size={14} color={colors.primary} />
+            )}
+            <Text style={[styles.compactBtnText, { color: colors.text }]}>
+              Sinkronkan
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
+      {lastError ? (
+        <Pressable
+          onPress={clearError}
+          style={[styles.errorBanner, { backgroundColor: `${colors.danger}18` }]}
+        >
+          <Ionicons name="alert-circle" size={16} color={colors.danger} />
+          <Text style={[styles.errorText, { color: colors.danger }]}>
+            {lastError}
           </Text>
         </Pressable>
-      </View>
+      ) : null}
 
       {/* Aksi Cepat Compact (Play/Stop Menyatu) */}
       <View style={styles.sectionHeader}>
@@ -358,24 +361,44 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 10,
   },
+  topRow: { flexDirection: 'row', gap: 10 },
+  compactCard: {
+    flex: 1,
+    borderRadius: 14,
+    borderWidth: 1,
+    padding: 12,
+    gap: 6,
+    justifyContent: 'space-between',
+  },
+  compactTitle: { fontSize: 13, fontWeight: '700' },
+  compactStatus: { fontSize: 12.5, fontWeight: '600' },
+  compactBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+    paddingVertical: 8,
+    borderRadius: 9,
+    marginTop: 4,
+  },
+  compactBtnText: { fontSize: 12.5, fontWeight: '700' },
   rowBetween: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  rowCenter: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  dot: { width: 10, height: 10, borderRadius: 5 },
-  cardTitle: { fontSize: 16, fontWeight: '700' },
+  rowCenter: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dot: { width: 8, height: 8, borderRadius: 4 },
+  cardTitle: { fontSize: 15, fontWeight: '700' },
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    gap: 4,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
     borderRadius: 999,
   },
-  badgeText: { fontSize: 12, fontWeight: '600' },
-  statusText: { fontSize: 15, fontWeight: '600' },
+  badgeText: { fontSize: 11, fontWeight: '700' },
   errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -383,30 +406,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
-  errorText: { flex: 1, fontSize: 13 },
-  primaryBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 12,
-    borderRadius: 12,
-    marginTop: 4,
-  },
-  btnText: { fontSize: 15, fontWeight: '700' },
-  mutedLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
-  clockText: { fontSize: 36, fontWeight: '800', fontVariant: ['tabular-nums'] },
-  dateText: { fontSize: 14 },
-  secondaryBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 11,
-    borderRadius: 12,
-    marginTop: 6,
-  },
-  secondaryBtnText: { fontSize: 14, fontWeight: '600' },
+  errorText: { flex: 1, fontSize: 12.5 },
+  mutedLabel: { fontSize: 10.5, fontWeight: '700', letterSpacing: 0.8 },
+  clockText: { fontSize: 22, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  dateText: { fontSize: 12 },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',

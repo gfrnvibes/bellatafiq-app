@@ -211,13 +211,16 @@ export default function DashboardScreen() {
               key={item.id}
               disabled={busy}
               onPress={() => handleToggleQuickBell(item.id)}
-              style={[
+              style={({ pressed }) => [
                 styles.quickCompactCard,
                 {
                   backgroundColor: isPlaying
-                    ? `${colors.danger}14`
+                    ? `${colors.danger}16`
                     : colors.surface,
                   borderColor: isPlaying ? colors.danger : colors.border,
+                  borderBottomColor: isPlaying ? colors.danger : colors.primary,
+                  opacity: pressed ? 0.85 : 1,
+                  transform: [{ scale: pressed ? 0.98 : 1 }],
                 },
               ]}
             >
@@ -232,7 +235,7 @@ export default function DashboardScreen() {
                 ]}
               >
                 <Ionicons
-                  name={isPlaying ? 'stop' : (item.icon as never)}
+                  name={item.icon as never}
                   size={16}
                   color={isPlaying ? '#FFFFFF' : colors.primary}
                 />
@@ -250,9 +253,14 @@ export default function DashboardScreen() {
                     { color: isPlaying ? colors.danger : colors.textMuted },
                   ]}
                 >
-                  {isPlaying ? 'Ketuk untuk Stop' : `MP3 #${item.id}`}
+                  {isPlaying ? 'Stop' : `#${item.id}`}
                 </Text>
               </View>
+              <Ionicons
+                name={isPlaying ? 'stop-circle' : 'play-circle'}
+                size={20}
+                color={isPlaying ? colors.danger : colors.primary}
+              />
             </Pressable>
           );
         })}
@@ -414,11 +422,17 @@ const styles = StyleSheet.create({
     width: '48.8%',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 8,
     borderRadius: 12,
     borderWidth: 1,
+    borderBottomWidth: 3,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
   },
   quickIconCircle: {
     width: 32,

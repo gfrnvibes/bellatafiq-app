@@ -28,16 +28,14 @@ export default function TabLayout() {
         options={{
           title: 'Bellatafiq',
           tabBarLabel: 'Beranda',
-          headerTitleAlign: 'left',
-          headerTitleContainerStyle: { marginLeft: 16, paddingLeft: 0 },
+          headerTitleAlign: 'center',
           headerTitle: () => (
             <View
               style={{
                 backgroundColor: '#FFFFFF',
-                paddingHorizontal: 8,
+                paddingHorizontal: 10,
                 paddingVertical: 3,
                 borderRadius: 8,
-                alignSelf: 'flex-start',
               }}
             >
               <Image

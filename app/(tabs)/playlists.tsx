@@ -62,6 +62,51 @@ export default function PlaylistsByCategoryScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
+      {/* Putar Nomor MP3 Manual */}
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: colors.surface, borderColor: colors.border, marginTop: 0 },
+        ]}
+      >
+        <Text style={[styles.catTitle, { color: colors.text }]}>
+          Putar Nomor MP3 Manual
+        </Text>
+        <View style={styles.customRow}>
+          <TextInput
+            value={customId}
+            onChangeText={setCustomId}
+            keyboardType="number-pad"
+            placeholder="No. MP3"
+            placeholderTextColor={colors.textMuted}
+            style={[
+              styles.input,
+              { borderColor: colors.border, color: colors.text },
+            ]}
+          />
+          <Pressable
+            disabled={busy}
+            onPress={() => handlePlay(Number.parseInt(customId, 10) || 1)}
+            style={[styles.playBtn, { backgroundColor: colors.primary }]}
+          >
+            <Ionicons name="play" size={16} color="#FFFFFF" />
+            <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>
+              Putar
+            </Text>
+          </Pressable>
+          <Pressable
+            disabled={busy}
+            onPress={handleStop}
+            style={[styles.playBtn, { backgroundColor: colors.danger }]}
+          >
+            <Ionicons name="stop" size={16} color="#FFFFFF" />
+            <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>
+              Stop
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
       {/* Pencarian */}
       <View
         style={[
@@ -328,51 +373,6 @@ export default function PlaylistsByCategoryScreen() {
               />
             </Pressable>
           ))}
-
-          {/* Putar Nomor MP3 Manual */}
-          <View
-            style={[
-              styles.card,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-            ]}
-          >
-            <Text style={[styles.catTitle, { color: colors.text }]}>
-              Putar Nomor MP3 Manual
-            </Text>
-            <View style={styles.customRow}>
-              <TextInput
-                value={customId}
-                onChangeText={setCustomId}
-                keyboardType="number-pad"
-                placeholder="No. MP3"
-                placeholderTextColor={colors.textMuted}
-                style={[
-                  styles.input,
-                  { borderColor: colors.border, color: colors.text },
-                ]}
-              />
-              <Pressable
-                disabled={busy}
-                onPress={() => handlePlay(Number.parseInt(customId, 10) || 1)}
-                style={[styles.playBtn, { backgroundColor: colors.primary }]}
-              >
-                <Ionicons name="play" size={16} color="#FFFFFF" />
-                <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>
-                  Putar
-                </Text>
-              </Pressable>
-              <Pressable
-                disabled={busy}
-                onPress={handleStop}
-                style={[styles.playBtn, { backgroundColor: colors.danger }]}
-              >
-                <Ionicons name="stop" size={16} color="#FFFFFF" />
-                <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>
-                  Stop
-                </Text>
-              </Pressable>
-            </View>
-          </View>
         </View>
       )}
     </ScrollView>

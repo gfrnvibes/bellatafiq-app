@@ -44,9 +44,18 @@ export default function TabLayout() {
       <Tabs.Screen
         name="audio"
         options={{
-          title: 'Putar Nada',
+          title: 'Bel Harian',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="musical-notes-outline" size={size} color={color as string} />
+            <Ionicons name="notifications-outline" size={size} color={color as string} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="playlists"
+        options={{
+          title: 'Daftar Putar',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="albums-outline" size={size} color={color as string} />
           ),
         }}
       />
